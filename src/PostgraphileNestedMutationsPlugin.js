@@ -322,7 +322,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
               if (identifiers.length !== primaryKeys.length) {
                 throw new Error('Invalid ID');
               }
-              condition = sql.fragment`${sql.join(
+              condition = sql.fragment`(${sql.join(
                 table.primaryKeyConstraint.keyAttributes.map(
                   (key, idx) =>
                     sql.fragment`${sql.identifier(key.name)} = ${gql2pg(
@@ -332,7 +332,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
                     )}`,
                 ),
                 ') and (',
-              )}`;
+              )})`;
             } catch (e) {
               debug(e);
               throw e;
@@ -389,9 +389,14 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
 
         await Promise.all(
           Object.keys(inputData).map(async (key) => {
-            const nestedField = pgNestedPluginReverseInputTypes[table.id].find(
+            let nestedField = pgNestedPluginReverseInputTypes[table.id].find(
               (obj) => obj.name === key,
             );
+            if (!nestedField) {
+              nestedField = pgNestedPluginForwardInputTypes[table.id].find(
+                (obj) => obj.name === key,
+              );
+            }
             if (!nestedField || !inputData[key]) {
               return;
             }
@@ -486,7 +491,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
                   await Promise.all(
                     updaterField.map(async (node) => {
                       const where = sql.fragment`
-                    ${sql.join(
+                    (${sql.join(
                       keys.map(
                         (k, i) =>
                           sql.fragment`${sql.identifier(k.name)} = ${sql.value(
@@ -494,7 +499,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
                           )}`,
                       ),
                       ') and (',
-                    )}
+                    )})
                   `;
                       const updatedRow = await pgNestedTableUpdate({
                         nestedField,
