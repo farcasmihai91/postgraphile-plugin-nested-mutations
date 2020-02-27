@@ -1,40 +1,43 @@
 {
-  "name": "postgraphile-plugin-nested-mutations",
-  "version": "1.0.1",
+  "name": "@farcasmihai91/postgraphile-plugin-nested-mutations",
+  "version": "1.0.2",
   "description": "Nested mutations plugin for PostGraphile",
   "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
-    "url": "git+https://github.com/mlipscombe/postgraphile-plugin-nested-mutations.git",
+    "url": "git+https://github.com/farcasmihai91/postgraphile-plugin-nested-mutations.git",
     "type": "git"
   },
   "author": "Mark Lipscombe",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mlipscombe/postgraphile-plugin-nested-mutations/issues"
+    "url": "https://github.com/farcasmihai91/postgraphile-plugin-nested-mutations/issues"
   },
   "scripts": {
     "test": "scripts/test jest -i",
     "lint": "eslint index.js src/**/*.js"
   },
   "dependencies": {
-    "graphile-build-pg": "^4.2.0"
+    "graphile-build-pg": "^4.5.3"
   },
   "peerDependencies": {
-    "postgraphile-core": "^4.2.0"
+    "postgraphile-core": "^4.5.3"
   },
   "devDependencies": {
-    "@graphile-contrib/pg-simplify-inflector": "^4.0.0-alpha.0",
-    "eslint": "^5.10.0",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "graphql": "^14.0.2",
-    "jest": "^24.8.0",
-    "jest-junit": "^5.2.0",
-    "pg": "^7.7.1",
-    "postgraphile-core": "^4.2.0",
-    "prettier": "^1.16.4"
+    "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "graphql": "^14.6.0",
+    "jest": "^25.1.0",
+    "jest-junit": "^10.0.0",
+    "pg": "^7.18.2",
+    "postgraphile-core": "^4.5.3",
+    "prettier": "^1.19.1"
   },
   "jest": {
     "testRegex": "__tests__/.*\\.test\\.js$",
