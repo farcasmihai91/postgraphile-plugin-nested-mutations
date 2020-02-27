@@ -195,22 +195,17 @@ module.exports = function PostGraphileNestedConnectorsPlugin(builder) {
                   description: `The fields on \`${tableFieldName}\` to look up the row to connect.`,
                   fields: () =>
                     keys
-                      .map((k) =>
-                        Object.assign(
-                          {},
-                          {
-                            [inflection.column(k)]: {
-                              description: k.description,
-                              type: new GraphQLNonNull(
-                                getGqlInputTypeByTypeIdAndModifier(
-                                  k.typeId,
-                                  k.typeModifier,
-                                ),
-                              ),
-                            },
-                          },
-                        ),
-                      )
+                      .map((k) => ({
+                        [inflection.column(k)]: {
+                          description: k.description,
+                          type: new GraphQLNonNull(
+                            getGqlInputTypeByTypeIdAndModifier(
+                              k.typeId,
+                              k.typeModifier,
+                            ),
+                          ),
+                        },
+                      }))
                       .reduce((res, o) => Object.assign(res, o), {}),
                 },
                 {
