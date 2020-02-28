@@ -30,26 +30,23 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
         // Allow nulls on keys that have forward mutations available.
         keys.forEach((k) => {
           const keyFieldName = inflection.column(k);
-          nestedFields[keyFieldName] = Object.assign({}, fields[keyFieldName], {
+          nestedFields[keyFieldName] = {
+            ...fields[keyFieldName],
             type: getGqlInputTypeByTypeIdAndModifier(k.typeId, k.typeModifier),
-          });
+          };
         });
 
-        nestedFields[name] = Object.assign({}, fields[name], {
-          type: connectorInputField,
-        });
+        nestedFields[name] = { ...fields[name], type: connectorInputField };
       },
     );
 
     pgNestedPluginReverseInputTypes[table.id].forEach(
       ({ name, connectorInputField }) => {
-        nestedFields[name] = Object.assign({}, fields[name], {
-          type: connectorInputField,
-        });
+        nestedFields[name] = { ...fields[name], type: connectorInputField };
       },
     );
 
-    return Object.assign({}, fields, nestedFields);
+    return { ...fields, ...nestedFields };
   });
 
   builder.hook('GraphQLObjectType:fields:field', (field, build, context) => {
@@ -127,7 +124,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
       resolveInfo,
     ) => {
       const nestedFields = pgNestedPluginForwardInputTypes[table.id];
-      const output = Object.assign({}, input);
+      const output = { ...input };
       await Promise.all(
         nestedFields
           .filter((k) => input[k.name])
@@ -210,16 +207,15 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
               const resolver = pgNestedResolvers[foreignTable.id];
               const tableVar = inflection.tableFieldName(foreignTable);
 
-              const insertData = Object.assign(
-                {},
-                createData,
-                await recurseForwardNestedMutations(
+              const insertData = {
+                ...createData,
+                ...(await recurseForwardNestedMutations(
                   data,
                   { input: { [tableVar]: createData } },
                   { pgClient },
                   resolveInfo,
-                ),
-              );
+                )),
+              };
 
               const resolveResult = await resolver(
                 data,
@@ -271,11 +267,10 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
           resolveInfo,
         );
 
-        const inputData = Object.assign(
-          {},
-          input[tableFieldName],
-          forwardOutput,
-        );
+        const inputData = {
+          ...input[tableFieldName],
+          ...forwardOutput,
+        };
 
         let mutationQuery = null;
 
@@ -527,8 +522,11 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
             );
 
             if (fieldValue.create) {
+              const createData = Array.isArray(fieldValue.create)
+                ? fieldValue.create
+                : [fieldValue.create];
               await Promise.all(
-                fieldValue.create.map(async (rowData) => {
+                createData.map(async (rowData) => {
                   const resolver = pgNestedResolvers[foreignTable.id];
                   const tableVar = inflection.tableFieldName(foreignTable);
 
@@ -542,7 +540,7 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
                     data,
                     {
                       input: {
-                        [tableVar]: Object.assign({}, rowData, keyData),
+                        [tableVar]: { ...rowData, ...keyData },
                       },
                     },
                     { pgClient },
@@ -657,6 +655,6 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
       pgNestedResolvers[table.id] = newResolver;
     }
 
-    return Object.assign({}, field, { resolve: newResolver });
+    return { ...field, resolve: newResolver };
   });
 };
