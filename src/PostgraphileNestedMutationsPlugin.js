@@ -384,14 +384,9 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
 
         await Promise.all(
           Object.keys(inputData).map(async (key) => {
-            let nestedField = pgNestedPluginReverseInputTypes[table.id].find(
+            const nestedField = pgNestedPluginReverseInputTypes[table.id].find(
               (obj) => obj.name === key,
             );
-            if (!nestedField) {
-              nestedField = pgNestedPluginForwardInputTypes[table.id].find(
-                (obj) => obj.name === key,
-              );
-            }
             if (!nestedField || !inputData[key]) {
               return;
             }
@@ -522,11 +517,8 @@ module.exports = function PostGraphileNestedMutationPlugin(builder) {
             );
 
             if (fieldValue.create) {
-              const createData = Array.isArray(fieldValue.create)
-                ? fieldValue.create
-                : [fieldValue.create];
               await Promise.all(
-                createData.map(async (rowData) => {
+                fieldValue.create.map(async (rowData) => {
                   const resolver = pgNestedResolvers[foreignTable.id];
                   const tableVar = inflection.tableFieldName(foreignTable);
 

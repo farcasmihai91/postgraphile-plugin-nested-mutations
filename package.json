@@ -1,6 +1,6 @@
 {
   "name": "@farcasmihai91/postgraphile-plugin-nested-mutations",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Nested mutations plugin for PostGraphile",
   "main": "index.js",
   "publishConfig": {
@@ -20,13 +20,13 @@
     "lint": "eslint index.js src/**/*.js"
   },
   "dependencies": {
-    "postgraphile-core": "^4.2.0"
+    "postgraphile-core": "^4.5.3"
   },
   "peerDependencies": {
-    "postgraphile-core": "^4.2.0"
+    "postgraphile-core": "^4.5.3"
   },
   "devDependencies": {
-    "@graphile-contrib/pg-simplify-inflector": "^4.0.0-alpha.0",
+    "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
@@ -36,7 +36,7 @@
     "jest": "^25.1.0",
     "jest-junit": "^10.0.0",
     "pg": "^7.18.2",
-    "postgraphile-core": "^4.2.0",
+    "postgraphile-core": "^4.5.3",
     "prettier": "^1.19.1"
   },
   "jest": {
